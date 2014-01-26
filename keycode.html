@@ -46,7 +46,9 @@
 					;
 
 					input.bind('keydown', function (evt) {
-						evt.preventDefault();
+						if (evt.keyCode == 18) {
+							evt.preventDefault();
+						}
 						// clear value
 						input.value = '';
 						output.innerHTML = evt.keyCode;
