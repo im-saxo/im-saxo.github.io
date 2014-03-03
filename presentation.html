@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		html, body {
+			font-family: Tahoma, Arial, sans-serif;
+			font-size: 20px;
+		}
+
+		header {
+			font-size: 1.4em;
+		}
+
+		code {
+			display: block;
+			margin: 5px 10px 10px;
+		}
+
+		.space {
+			padding-right: 46px;
+		}
+
+		.page {
+			display: none;
+		}
+
+	</style>
+</head>
+<body>
+<header>Shortcuts</header>
+<div class="page">
+	<div>
+		Инициализация
+	</div>
+	<code>
+		// Remove: button<br>
+		, {<br>
+		block: 'b-toolbar__btn'<br>
+		, icon:	 'toolbar_remove'<br>
+		, name:  'remove'<br>
+		, shortcut: 'del|command+backspace'<br>
+		}
+	</code>
+	<div>
+		Получаем
+	</div>
+	<code>
+		&lt;div data-bem=&quot;b-toolbar__btn&quot; data-name=&quot;remove&quot; data-shortcut=&quot;del|command+backspace&quot; class=&quot;b-toolbar__btn js-shortcut&quot;&gt...&lt/;div;&gt;
+	</code>
+	<div>
+		<br>
+		Или явно прописываем класс и атрибут на не тулкитовых кнопках (например, в синей шапке)
+	</div>
+</div>
+
+<div class="page">
+	<div>
+		b-shortcut.js
+	</div>
+	<div>
+		// элементы с горячими клавишами
+	</div>
+	<code>
+		this._collection = this.el.getElementsByClassName('js-shortcut');
+	</code>
+	<div>
+		// подписываемся на клавиатуру<br>
+		// и идем по всем горячим клавишам
+	</div>
+	<code>
+		for (i; i < collection.length; i++) {<br>
+		...<br>
+		}
+	</code>
+	<div>
+		// при совпадении (с учетом модификаторов)
+	</div>
+	<code>
+		if ((item.nodeName == 'INPUT' && (item.type == 'text' || item.type == 'password')) || item.nodeName == 'TEXTAREA') {<br>
+		<span class="space"></span>item.focus();<br>
+		} <br>
+		else {<br>
+		<span class="space"></span>$(item).mousedown().mouseup();<br>
+		<span class="space"></span>item.click();<br>
+		}
+	</code>
+</div>
+
+<div class="page">
+	<div>
+		Что может быть:
+	</div>
+	<div>
+		Простые
+	</div>
+	<code>
+		"a", "/", "space", "enter"
+	</code>
+
+	<div>
+		Простые
+	</div>
+	<code>
+		"a", "/", "space", "enter"
+	</code>
+
+	<div>
+		С модификаторами
+	</div>
+	<code>
+		"ctrl+a", "alt+cmd+escape"
+	</code>
+
+	<div>
+		Два шотката на кнопку
+	</div>
+	<code>
+		"a|b", "ctrl+r|cmd+r"
+	</code>
+
+	<div>
+		a, затем b
+	</div>
+	<code>
+		"g,c", "shift+g,space"
+	</code>
+
+	<div>
+		и самое интересное:
+	</div>
+	<code>
+		".: 'true', q: 'read', u: 'unread', i: 'flag_toggle' "
+	</code>
+	<div>
+		Это пишем в _ctrl дропдауна, для кликов по нему самому и по его элементов.<br><br>
+		В этом случае клик на фейковой кнопке:
+	</div>
+	<code>
+		$btn.attr('data-name', uiname)<br>
+		<span class="space"></span>.attr('data-group', group);<br>
+		<br>
+		$(item).append($btn);<br>
+		<br>
+		$btn.mousedown().mouseup();<br>
+		$btn[0].click();
+	</code>
+</div>
+
+<div class="page">
+	<div>
+		Подсказка в дропдауне
+	</div>
+	<img src="http://clip.corp.mail.ru/clip/m0/1393596490-clip-26kb-H6mvCLZqAswX.jpg">
+	<div>
+		<br>
+		<br>
+		Список всех горячих клавиш можно посмотреть, нажав
+	</div>
+	<code>
+		shift+?
+	</code>
+</div>
+
+
+
+
+
+<script type="text/javascript">
+	window.onload = function() {
+
+		var   pages = document.getElementsByClassName('page')
+			, curPage = 0
+		;
+
+		var show = function(num) {
+			curPage = Math.max(0, curPage);
+			curPage = Math.min(pages.length-1, curPage);
+
+			if (num > pages.length - 1 || num < 0) {
+				return;
+			}
+
+			for (var i = 0; i < pages.length; i++) {
+				if (i == num) {
+					pages[i].style.display = 'block';
+				}
+				else {
+					pages[i].style.display = 'none';
+				}
+			}
+		};
+
+		document.addEventListener('keyup', function(evt) {
+			var keyCode = evt.keyCode;
+
+			if (keyCode == 32 || keyCode == 39) {
+				show(++curPage);
+			}
+			else if (keyCode == 37) {
+				show(--curPage);
+			}
+		});
+
+		document.addEventListener('click', function(evt) {
+			show(++curPage);
+		});
+
+		show(0);
+
+	}
+</script>
+</body>
+</html>
