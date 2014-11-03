@@ -11,38 +11,29 @@
 		<meta name="description" content="">
 		<meta name="author" content="Saxo">
 
-		<link rel="stylesheet" href="main.css"/>
+		<link rel="stylesheet" href="../main.css"/>
 
-		<style type="text/css">
-			.inp {
-				width: 30px;
-				border: #68E813 1px solid;
-				border-radius: 2px;
-			}
-
-			.container {
-				margin: 5px;
-				padding: 3px;
-				border: #F5E647 1px solid;
-				border-radius: 4px;
-				background: #fff;
-			}
-		</style>
 	</head>
 
 	<body>
-		<header>Set focus to the input below and press a key</header>
-		<div class="container">
-			<input type="text" class="inp">
-			<div>
-				The key code is <span class="out"></span>
+		<div class="leftcol">
+			<a href="/index.html" class="leftcol__link">main</a>
+			<a href="/keycode/keycode.html" class="leftcol__link">key code</a>
+		</div>
+		<div class="content-wrapper">
+			<header>Set focus to the input below and press a key</header>
+			<div class="content">
+				<input type="text" class="js-input">
+				<div>
+					The key code is <span class="js-output"></span>
+				</div>
 			</div>
 		</div>
 
 		<script type="text/javascript">
 			window.onload = function() {
-				var   input = document.getElementsByClassName("inp")[0]
-					, output = document.getElementsByClassName('out')[0]
+				var   input = document.getElementsByClassName("js-input")[0]
+					, output = document.getElementsByClassName('js-output')[0]
 					;
 
 					input.bind('keydown', function (evt) {
