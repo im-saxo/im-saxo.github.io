@@ -1,0 +1,22 @@
+
+.btn_main {
+	background-color: #F08F8B;
+	padding: 8px;
+	border-radius: 4px;
+	color: #fff;
+	cursor: pointer;
+}
+
+.head {
+	margin: auto;
+	width: 90%;
+	padding: 5px 20px;
+}
+
+.content {
+	width: 90%;
+}
+
+.step {
+	display: none;
+}
