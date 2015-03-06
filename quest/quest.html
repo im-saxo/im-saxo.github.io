@@ -30,19 +30,102 @@
 				<p>
 					Давай поиграем?
 				</p>
-				<p>
+				<div class="box-center">
 					<btn class="btn_main js-go">Давай!</btn>
-				</p>
+				</div>
 			</div>
 
 			<div id="step-1" class="step">
 				<p>
 					Отлично! Тогда выбери цвет
 				</p>
-				<div>
+				<div class="box-center">
 					<div class="card js-card pink" data-color="pink"></div>
 					<div class="card js-card blue" data-color="blue"></div>
 					<div class="card js-card yellow" data-color="yellow"></div>
+				</div>
+			</div>
+
+			<div id="step-2" class="step">
+				<p>
+					Это было легко! Теперь задача посложнее. Запомни эту картинку:
+				</p>
+				<div class="box-center">
+					<div class="card">
+						<div class="image" style="background-image: url('/quest/images/1.jpg')"></div>
+					</div>
+				</div>
+				<div class="box-center">
+					<btn class="btn_main js-go">Угу</btn>
+				</div>
+			</div>
+
+			<div id="step-3" class="step">
+				<p>
+					А теперь найди её
+				</p>
+				<div class="box-center">
+					<div class="card">
+						<div class="image js-image" style="background-image: url('/quest/images/1.jpg')"></div>
+					</div>
+					<div class="card">
+						<div class="image js-image" style="background-image: url('/quest/images/2.jpg')"></div>
+					</div>
+					<div class="card">
+						<div class="image js-image" style="background-image: url('/quest/images/3.jpg')"></div>
+					</div>
+					<div class="card">
+						<div class="image js-image" style="background-image: url('/quest/images/4.jpg')"></div>
+					</div>
+				</div>
+				<div class="js-success" style="display: none;">
+					<p>
+						Правильно!
+					</p>
+					<div class="box-center">
+						<btn class="btn_main js-go">Дальше</btn>
+					</div>
+				</div>
+			</div>
+
+			<div id="step-4" class="step">
+				<p>
+					А если усложнить, найдешь?
+				</p>
+				<div class="box-center">
+					<div class="card">
+						<div class="image js-image" style="background-image: url('/quest/images/1.jpg')"></div>
+					</div>
+					<div class="card">
+						<div class="image js-image" style="background-image: url('/quest/images/1.jpg')"></div>
+					</div>
+					<div class="card">
+						<div class="image js-image" style="background-image: url('/quest/images/1.jpg')"></div>
+					</div>
+					<div class="card">
+						<div class="image js-image" style="background-image: url('/quest/images/1.jpg')"></div>
+					</div>
+				</div>
+				<div class="js-success" style="display: none;">
+					<p>
+						Вот это да!
+					</p>
+					<div class="box-center">
+						<btn class="btn_main js-go">Да!</btn>
+					</div>
+				</div>
+			</div>
+
+			<div id="step-5" class="step">
+				<p>
+					У тебя отличное зрение! Теперь обратимся к аналитическому отделу мозга. Выбери правильный ответ.
+				</p>
+				<div class="box-center js-info">
+					<btn class="btn_main js-go">Окей, где вопросы?</btn>
+				</div>
+				<div class="js-content" style="display:none;">
+					<p class="js-question"></p>
+					<div class="js-answers"></div>
 				</div>
 			</div>
 		</div>

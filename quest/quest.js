@@ -2,6 +2,81 @@
 	var $window = $(window),
 		$body = $(document.body);
 
+	var quizQuestions = [
+		{
+			question: "Зачем советским дворникам укоротили метлы?",
+			answers: [
+				{text: "Чтоб не улетали в Хогвартс", correct: false},
+				{text: "Чтоб не стояли без дела, опираясь на метлы", correct: true},
+				{text: "Чтоб было больше места в подсобке", correct: false}
+			]
+		},
+		{
+			question: "Согласно детскому определению, американец - это человек с двумя руками и четырьмя... Чем?",
+			answers: [
+				{text: "Ногами", correct: false},
+				{text: "Кошельками", correct: false},
+				{text: "Колесами", correct: true}
+			]
+		},
+		{
+			question: "Что больше весит -  1кг ваты или 1кг железа?",
+			answers: [
+				{text: "Вата", correct: false},
+				{text: "Железо", correct: false},
+				{text: "2кг темной материи", correct: true}
+			]
+		},
+		{
+			question: "Какая из перечисленных ниже формул имеет прямое отношение к теории относительности?",
+			answers: [
+				{text: "Формула 1", correct: false},
+				{text: "E = mc2", correct: true},
+				{text: "Коммунизм = советская власть + электрификация всей страны", correct: false},
+				{text: "Всё в мире относительно, так что с какой стороны посмотреть", correct: false}
+			]
+		},
+		{
+			question: "Отгадайте загадку: 'без окон, без дверей, полна горна людей'?",
+			answers: [
+				{text: "Не знаю точно, но похоже на какой-то овощ с большим количеством семян ", correct: true},
+				{text: "Следственный изолятор", correct: false},
+				{text: "МКС во время визита космических туристов", correct: false},
+				{text: "Банка килек в томате", correct: false}
+			]
+		}
+	];
+
+	function shuffle(array) {
+		var currentIndex = array.length, temporaryValue, randomIndex;
+
+		// While there remain elements to shuffle...
+		while (0 !== currentIndex) {
+
+			// Pick a remaining element...
+			randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex -= 1;
+
+			// And swap it with the current element.
+			temporaryValue = array[currentIndex];
+			array[currentIndex] = array[randomIndex];
+			array[randomIndex] = temporaryValue;
+		}
+
+		return array;
+	}
+
+	function blink (correct, callback) {
+		var $content = $('.content');
+			$content.css('background-color', correct ? '#B0F489' : '#F48989');
+			setTimeout(function () {
+				$content.css('background-color', '');
+				if (callback) {
+					callback();
+				}
+			}, 400);
+	}
+
 	// VIEW
 	function BaseView () {}
 
@@ -44,13 +119,13 @@
 
 
 
-	// STEP 0
+	// STEP 0, 2
 	function ZeroStep (id) {
 		this.setEl(id);
 		this.$go = this.$('.js-go');
 		this.$go.bind('click', function () {
 			Controller.nextStep();
-		})
+		});
 	}
 
 	extendView(ZeroStep, {
@@ -103,6 +178,141 @@
 
 
 
+	// STEP 3
+	function ChoosePicture (id, rotate) {
+		this.setEl(id);
+
+		this.$success = this.$('.js-success');
+		this.$go = this.$('.js-go').bind('click', function () {
+			Controller.nextStep();
+		});
+		
+		this.$images = this.$('.js-image');
+		this.initImages(this.$images, rotate);
+		this.$images.bind('click', this.onCLick.bind(this))
+
+	}
+
+	extendView(ChoosePicture, {
+		initImages: function ($images, rotate) {
+			var names = shuffle(['1', '2', '3', '4']),
+				degrees = {
+					"1": "0",
+					"2": "90deg",
+					"3": "180deg",
+					"4": "270deg"
+				}
+				path = '/quest/images/',
+				i = 0, l = names.length;
+
+			for (i; i < l; i++) {
+				$($images[i])
+					.attr('data-image', '' + names[i])
+					.css(!rotate ? {'background-image': "url('" + path + names[i] + ".jpg')"} : 
+						{
+							'-webkit-transform': 'rotate(' + degrees[names[i]] + ')',
+							'-moz-transform': 'rotate(' + degrees[names[i]] + ')',
+							'transform': 'rotate(' + degrees[names[i]] + ')',
+						});
+			}
+
+		},
+
+		onCLick: function (evt) {
+			var $image = $(evt.currentTarget);
+			if ($image.attr('data-image') == '1') {
+				blink(true, this.$success.show);
+			}
+			else {
+				blink(false);
+			}
+
+		},
+
+
+		destroy: function () {
+			this.$go.unbind('click');
+			this.$images.unbind('click');
+			this.$success.hide();
+		}
+	});
+
+
+	function Quiz (id) {
+		this.setEl(id);
+		this.qurrentQuestion = 0;
+		this.totalQuestions = 3;
+		shuffle(quizQuestions);
+
+		this.$info = this.$('.js-info');
+		this.$content = this.$('.js-content');
+		this.$question = this.$('.js-question');
+		this.$answers = this.$('.js-answers');
+		this.$go = this.$('.js-go');
+		this.$go.bind('click', this.begin.bind(this));
+	}
+
+	extendView(Quiz, {
+		begin: function () {
+			this.$info.hide();
+			this.$content.fadeIn();
+
+			this.$go
+				.text('Я молодец!')
+				.unbind('click')
+				.bind('click', function () {
+					Controller.nextStep();
+				});
+
+			this.nextQuestion();
+		},
+
+		nextQuestion: function () {
+			if (this.qurrentQuestion < this.totalQuestions) {
+				var quiz = quizQuestions[this.qurrentQuestion],
+					answer,
+					$html;
+
+				this.$question.text(quiz.question);
+				this.getRadio().unbind('change');
+				this.$answers.empty();
+				for (var i = 0, l = quiz.answers.length; i < l; i++) {
+					answer = quiz.answers[i];
+					$html = $('<div><label><input type="radio" name="quiz" value="' + (answer.correct ? 1 : 0) + '"/>' + answer.text + '</label></div>');
+					this.$answers.append($html);
+				}
+				this.getRadio().bind('change', this.check.bind(this));
+				this.qurrentQuestion++;
+			}
+			else {
+				this.$content.hide();
+				this.$info.show();
+			}
+		},
+
+		getRadio: function () {
+			return this.$answers.find('input[type="radio"][name="quiz"]');
+		},
+
+		check: function (evt) {
+			if (evt.target.value == "1") {
+				blink(true, this.nextQuestion.bind(this));
+			}
+			else {
+				blink(false);
+			}
+		},
+
+		destroy: function () {
+			this.$go.text('Окей, где вопросы?').unbind('click');
+			this.$content.hide();
+			this.$info.show();
+			this.qurrentQuestion = 0;
+		}
+	});
+
+
+
 	// NAVIGATION
 	$(function() {
 		var Controller = {
@@ -120,11 +330,15 @@
 
 				this.stepController = {
 					0: new ZeroStep(0),
-					1: new ChooseColor(1)
+					1: new ChooseColor(1),
+					2: new ZeroStep(2),
+					3: new ChoosePicture(3),
+					4: new ChoosePicture(4, true),
+					5: new Quiz(5)
 				};
 
-				this.currentStep = 1; // TODO 0
-				this.setStep(1); // TODO 0
+				this.currentStep = 5; // TODO 0
+				this.setStep(5); // TODO 0
 			},
 
 			setStep: function (id) {

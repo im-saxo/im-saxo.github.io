@@ -1,8 +1,9 @@
 
 /* кнопки */
 .btn_main {
+	display: inline-block;
 	background-color: #F08F8B;
-	padding: 8px;
+	padding: 6px 10px;
 	border-radius: 4px;
 	color: #fff;
 	cursor: pointer;
@@ -26,12 +27,17 @@
 	display: none;
 }
 
+.box-center {
+	text-align: center;
+}
+
 .card {
 	cursor: pointer;
 	display: inline-block;
-	width: 200px;
-	height: 200px;
+	width: 225px;
+	height: 225px;
 	border-radius: 3px;
+	overflow: hidden;
 }
 
 .pink {
@@ -44,4 +50,15 @@
 
 .yellow {
 	background-color: #fff799;
+}
+
+.image {
+	width: 100%;
+	height: 100%;
+	background-position: center center; 
+	background-repeat: no-repeat;
+}
+
+.active {
+	cursor: pointer;
 }
