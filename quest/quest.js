@@ -221,7 +221,9 @@
 		onCLick: function (evt) {
 			var $image = $(evt.currentTarget);
 			if ($image.attr('data-image') == '1') {
-				blink(true, this.$success.show);
+				blink(true, function () {
+					this.$success.show();
+				}.bind(this));
 			}
 			else {
 				blink(false);
@@ -257,13 +259,6 @@
 			this.$info.hide();
 			this.$content.fadeIn();
 
-			this.$go
-				.text('Я молодец!')
-				.unbind('click')
-				.bind('click', function () {
-					Controller.nextStep();
-				});
-
 			this.nextQuestion();
 		},
 
@@ -285,8 +280,7 @@
 				this.qurrentQuestion++;
 			}
 			else {
-				this.$content.hide();
-				this.$info.show();
+				Controller.nextStep();
 			}
 		},
 
@@ -308,6 +302,126 @@
 			this.$content.hide();
 			this.$info.show();
 			this.qurrentQuestion = 0;
+		}
+	});
+
+
+	function RememberColor (id) {
+		this.setEl(id);
+		this.$content = this.$('.js-content');
+	}
+
+	extendView(RememberColor, {
+		show: function () {
+			this.active = true;
+			this.$el.fadeIn();
+			this.initColors();
+		},
+
+		initColors: function () {
+			var selected = $body.attr('class'),
+				colors = ['pink', 'blue', 'yellow', 'brown', 'green', 'red', 'orange'],
+				correct, i;
+			
+			for (i = 0; i < 3; i++) {
+				if (colors[i] != selected) {
+					if (correct) {
+						colors.splice(i, 1);
+						break;
+					}
+					else {
+						correct = colors[i];
+					}
+				}
+			}
+
+			shuffle(colors);
+
+			this.getCards().unbind('click');
+			this.$content.empty();
+			for (i = 0; i < colors.length; i++) {
+				this.$content.append($('<div class="card js-card ' + colors[i] + '" data-color="' + colors[i] + '"></div>'))
+			}
+
+			this.getCards().bind('click', function (evt) {
+				var $card = $(evt.currentTarget),
+					color = $card.attr('data-color');
+
+				if (color == correct) {
+					var $clone = $card.clone();
+
+					$clone.css({
+						'position': 'absolute',
+						'width': $card.width() + 'px',
+						'height': $card.height() + 'px',
+						'top': $card.offset().top,
+						'left': $card.offset().left
+					});
+					$body.append($clone);
+
+					$clone.animate({
+						left: 0,
+						top: 0,
+						width: $window.width(),
+						height: $window.height()
+					}, 'fast', function () {
+						$clone.remove();
+						Controller.nextStep();
+					}.bind(this))
+				}
+				else{
+					blink(false);
+				}
+			});
+		},
+
+		getCards: function () {
+			return this.$content.find('.js-card');
+		}
+	});
+
+
+	function TheBoss (id) {
+		this.setEl(id);
+		this.$lamps = this.$('.js-lamp');
+		this.$lamps.bind('click', function (evt) {
+			var $lamp = $(evt.currentTarget);
+			if ($lamp.hasClass('lamp_on')) {
+				$lamp.removeClass('lamp_on');
+			}
+			else {
+				$lamp.addClass('lamp_on');
+			}
+		});
+		this.$box = this.$('.js-blackbox')
+			.bind('click', this.onBoxClick.bind(this));
+		this.$go = this.$('.js-go').bind('click', function () {
+			Controller.nextStep();
+		});
+		this.opacity = 1;
+	}
+
+	extendView(TheBoss, {
+		onBoxClick: function () {
+			this.opacity -= .2;
+			if (this.opacity > .2) {
+				this.$box.css('opacity', this.opacity);
+			}
+			else {
+				this.$box.removeClass('black')
+					.css('opacity', 1);
+				this.$go.show();
+			}
+		},
+
+		destroy: function () {
+			this.$go.unbind('click')
+				.hide();
+			this.$lamps.unbind('click')
+				.removeClass('lamp_on');
+			this.$box.addClass('black')
+				.css('opacity', 1);
+			this.opacity = 1;
 		}
 	});
 
@@ -334,11 +448,15 @@
 					2: new ZeroStep(2),
 					3: new ChoosePicture(3),
 					4: new ChoosePicture(4, true),
-					5: new Quiz(5)
+					5: new Quiz(5),
+					6: new ZeroStep(6),
+					7: new RememberColor(7),
+					8: new TheBoss(8),
+					9: new ZeroStep(9)
 				};
 
-				this.currentStep = 5; // TODO 0
-				this.setStep(5); // TODO 0
+				this.currentStep = 0;
+				this.setStep(0);
 			},
 
 			setStep: function (id) {
