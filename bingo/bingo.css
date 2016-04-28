@@ -1,0 +1,47 @@
+input {
+	width: 70px;
+}
+
+.table {
+	display: table;
+	margin: 20px auto 0;
+	border-spacing: 40px 0;
+}
+
+.bingobox {
+	display: table-cell;
+	width: 299px;
+	height: 299px;
+	background-image: url("/bingo/circle.png");
+	background-repeat: no-repeat;
+	cursor: pointer;
+	transform: rotate(0deg);
+	transition: transform 1s ease-out;
+}
+
+.bingobox_active {
+	transform: rotate(360deg);
+}
+
+.result {
+	display: table-cell;
+	width: 250px;
+	height: 299px;
+	border: 1px solid #d9daa6;
+	background-color: #feffda;
+	vertical-align: middle;
+	opacity: 0;
+}
+.result_on {
+	opacity: 1;
+	transition: opacity 0.3s linear;
+}
+
+.result__text {
+	font-size: 4rem;
+}
+
+.results-box {
+	width: 100%;
+	height: 200px;
+}
