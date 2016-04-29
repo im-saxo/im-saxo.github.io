@@ -2,6 +2,10 @@ input {
 	width: 70px;
 }
 
+.content-wrapper {
+	padding-left: 0;
+}
+
 .table {
 	display: table;
 	margin: 20px auto 0;
